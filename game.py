@@ -2,6 +2,7 @@
 Developer Notes:
 
 The game resets if the snake collides with the walls and itself.
+Snake needs to detect whether it collided with itself.
 """
 
 import pygame
@@ -58,7 +59,7 @@ def main():
             slither = snake.moveRight
             direction = 'r'
 
-        if snake.getTop() <= 0 or snake.getBottom() >= height or snake.getLeft() <= 0 or snake.getRight() >= width:
+        if snake.getTop() <= 0 or snake.getBottom() >= height or snake.getLeft() <= 0 or snake.getRight() >= width or snake.collision():
             # resets game 
             snake.reset() # use inheritance to update apple when snake resets
             apple.reset()
@@ -74,9 +75,12 @@ def main():
         snakeHead = snake.getHead()
         if snakeHead.colliderect(apple.apple):
             snake.add(direction)
+            # make snake grow 3 times faster
+            # snake.add(direction)
+            # snake.add(direction)
 
-            apple.apple.x = random.randrange(0, width, 10)
-            apple.apple.y = random.randrange(0, height, 10)
+            apple.apple.x = random.randrange(10, width - 10, 10)
+            apple.apple.y = random.randrange(10, height - 10, 10)
 
         pygame.display.update()
         fps.tick(frames)
