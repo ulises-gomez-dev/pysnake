@@ -102,7 +102,7 @@ class Snake:
 
     def collision(self) -> bool:
         """
-        checks whether the snake collides with itself
+        checks whether the snake collides with itself and returns True; False otherwise
         """
         snakeHead = self.getHead()
 
