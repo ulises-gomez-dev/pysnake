@@ -3,3 +3,10 @@
 width, height = 500, 300
 frames = 60
 
+# Colors (R, G, B)
+green = (68, 214, 44)
+
+# Snake settings
+snake_speed = 3
+snake_width = 10
+snake_height = 10

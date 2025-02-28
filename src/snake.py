@@ -1,19 +1,20 @@
 import pygame
+from config import snake_width, snake_height, snake_speed, green
 
 class Snake:
-    def __init__(self, size: int=10, speed: int=3, color: tuple[int]=(68, 214, 44)) -> None:
+    def __init__(self) -> None:
         # React(left, top, width, height) -> Rect
-        self.head: list[pygame.Rect] = []
+        self.snake: list[pygame.Rect] = []
 
-        self.width: int = size
-        self.height: int = size
-        self.speed: int = speed    
-        self.color: tuple[int] = color
+        self.width: int = snake_width
+        self.height: int = snake_height
+        self.speed: int = snake_speed    
+        self.color: tuple[int] = green
 
-        self.head.append(pygame.Rect(50, 150, self.width, self.height))
+        self.snake.append(pygame.Rect(50, 150, snake_width, snake_height))
 
     def getHead(self):
-        return self.head[0]
+        return self.snake[0]
 
     def getTop(self):
         snakeHead = self.getHead()
@@ -39,7 +40,7 @@ class Snake:
         head
         """
         self.update()
-        self.head[0].y -= self.speed        
+        self.snake[0].y -= self.speed        
 
     def moveDown(self):
         """
@@ -49,7 +50,7 @@ class Snake:
         head
         """
         self.update()
-        self.head[0].y += self.speed
+        self.snake[0].y += self.speed
 
     def moveLeft(self):
         """
@@ -59,7 +60,7 @@ class Snake:
         head
         """
         self.update()
-        self.head[0].x -= self.speed
+        self.snake[0].x -= self.speed
 
     def moveRight(self):
         """
@@ -69,10 +70,15 @@ class Snake:
         head
         """
         self.update()
-        self.head[0].x += self.speed
+        self.snake[0].x += self.speed
 
     def add(self, direction: str):
-        snakeTail = self.head[-1]
+        """
+        increases the size of the snake; the placement of the new rectangle will depend on the direction
+        of the last rectangle in the snake array (i.e. if the tail is moving right, the new rectangle will be 
+        placed on the left side of that rectangle)
+        """
+        snakeTail = self.snake[-1]
         newSnakeTail = pygame.Rect(snakeTail.left, snakeTail.top, self.width, self.height) # can you make a copy of the reference 
 
         if direction == 'u':
@@ -84,7 +90,7 @@ class Snake:
         elif direction == 'r':
             newSnakeTail.left -= self.width
         
-        self.head.append(newSnakeTail)   
+        self.snake.append(newSnakeTail)   
 
 
     def update(self):
@@ -92,9 +98,9 @@ class Snake:
         updates each individual square with the previous squares position
         (i.e. square[i] inherits square[i - 1] x and y coordinates)
         """
-        x_curr, y_curr = self.head[0].x, self.head[0].y
+        x_curr, y_curr = self.snake[0].x, self.snake[0].y
 
-        for current in self.head[1:]:
+        for current in self.snake[1:]:
             x_prev, y_prev = current.x, current.y
             current.x, current.y = x_curr, y_curr
             x_curr, y_curr = x_prev, y_prev
@@ -106,8 +112,8 @@ class Snake:
         """
         snakeHead = self.getHead()
 
-        for i in range(1, len(self.head)):
-            if snakeHead.x == self.head[i].x and snakeHead.y == self.head[i].y:
+        for i in range(1, len(self.snake)):
+            if snakeHead.x == self.snake[i].x and snakeHead.y == self.snake[i].y:
                 return True
 
         return False
@@ -118,7 +124,7 @@ class Snake:
         iterates through self.snake and draws each individual square onto 
         the given screen
         """
-        for current in self.head:
+        for current in self.snake:
             pygame.draw.rect(screen, self.color, current)
 
 
@@ -127,7 +133,7 @@ class Snake:
         resets the snake's head to it's initial starting position; deleting 
         1 to n squares, this ensures that the players progress is reset
         """
-        del self.head[1:]
+        del self.snake[1:]
 
         snakeHead = self.getHead()
         snakeHead.x, snakeHead.y = 50, 150
